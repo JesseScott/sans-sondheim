@@ -1,16 +1,14 @@
 
 //-------------------------------------
-// MAIL
+// CHECK MAIL
 //-------------------------------------
 
 void checkMail() {
   try {
     Properties props = System.getProperties();
-
     props.put("mail.pop3.host", "pop.gmail.com");
     
-    // These are security settings required for gmail
-    // May need different code depending on the account
+    // Security settings required for gmail
     props.put("mail.pop3.port", "995");
     props.put("mail.pop3.starttls.enable", "true");
     props.setProperty("mail.pop3.socketFactory.fallback", "false");
@@ -27,25 +25,32 @@ void checkMail() {
     // Get inbox
     Folder folder = store.getFolder("INBOX");
     folder.open(Folder.READ_ONLY);
-    System.out.println(folder.getMessageCount() + " total messages.");
+    println("There Are " + folder.getMessageCount() + " Total Messages \n");
     
     // Get array of messages and display them
     Message message[] = folder.getMessages();
-    for (int i=0; i < message.length; i++) {
-      System.out.println("---------------------");
-      System.out.println("Message # " + (i+1));
-      System.out.println("From: " + message[i].getFrom()[0]);
-      System.out.println("Subject: " + message[i].getSubject());
-      System.out.println("Message:");
-      String content = message[i].getContent().toString(); 
-      System.out.println(content);
+    
+    for (int i = 0; i < message.length; i++) {
+      println("---------------------");
+      Address address = message[i].getFrom()[0];
+      String from = address.toString();
+      
+      println("Message # " + (i+1));
+      println("From: " + from);
+      
+      if( filterSubjects(from)) {
+        String subject = message[i].getSubject();
+        println("Subject: " + subject);
+        String content = message[i].getContent().toString(); 
+        println("Content: \n" + content);
+      }
+      println("\n\n");
     }
     
     // Close the session
     folder.close(false);
     store.close();
   } 
-  // This error handling isn't very good
   catch (Exception e) {
     e.printStackTrace();
   }
