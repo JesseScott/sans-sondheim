@@ -13,21 +13,21 @@ public class Auth extends Authenticator {
   public PasswordAuthentication getPasswordAuthentication() {
     String username = ""; 
     String password = "";
-    
+
     try {
       P5Properties properties = new P5Properties();
-      properties.load(openStream("settings.properties"));
-       
+      properties.load(openStream("settings/settings.properties"));
+
       username = properties.getStringProperty("env.view.username", "null");
       password = properties.getStringProperty("env.view.password", "null");
-      println("Username is " + username);
-      println("Password is " + password);
+      //println("Username is " + username);
+      //println("Password is " + password);
     }
     catch(IOException e) {
       println("Couldn't read settings file...");
     }
     
-    println("authenticating. . ");
+    println(" -- Authenticating -- ");
     return new PasswordAuthentication(username, password);
   }
 }
